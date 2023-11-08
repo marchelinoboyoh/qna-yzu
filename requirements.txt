@@ -1,3 +1,6 @@
 Flask
 Gunicorn
 OpenAi
+Langchain
+PyPDF2
+Fais

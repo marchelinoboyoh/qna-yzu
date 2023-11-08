@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with AI</title>
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    
+    <div id="chat-container">
+        <div id="chat-history">
+            {% for entry in chat_history %}
+                <div class="message user">{{ entry.user }}</div>
+                <div class="message assistant">{{ entry.assistant }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Ask a question...">
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        // JavaScript code to handle the chat functionality
+        // You can use JavaScript to send user input to the server and display responses
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatForm = document.getElementById("chat-form");
+            const userInput = document.getElementById("user-input");
+            const chatHistory = document.getElementById("chat-history");
+
+            chatForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const userMessage = userInput.value;
+                const userMessageDiv = document.createElement("div");
+                userMessageDiv.classList.add("message", "user");
+                userMessageDiv.textContent = userMessage;
+                chatHistory.appendChild(userMessageDiv);
+
+                // Send the user message to the server and update the chat history
+                fetch("/get_response", {
+                    method: "POST",
+                    body: new URLSearchParams({ user_input: userMessage }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const assistantMessage = data.response;
+                    const assistantMessageDiv = document.createElement("div");
+                    assistantMessageDiv.classList.add("message", "assistant");
+                    assistantMessageDiv.textContent = assistantMessage;
+                    chatHistory.appendChild(assistantMessageDiv);
+                });
+
+                userInput.value = "";
+            });
+        });
+    </script>
+</body>
+</html>
