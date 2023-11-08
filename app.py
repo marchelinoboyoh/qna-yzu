@@ -65,6 +65,3 @@ def get_response():
         chat_history.append({'user': user_input, 'assistant': response['response']})
 
         return jsonify(response)
-
-if __name__ == '__main__':
-    app.run(debug=True)
